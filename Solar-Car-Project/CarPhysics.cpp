@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include <iostream>
 #include <cmath>
+#include <math.h>
 
 
 
@@ -73,7 +74,7 @@ double get_irradiance(double current_time)
 {
     // TODO: IMPLEMENT ME!
     //2100 * 2^(-secant(pi/2((fmod(t, 12.0))/6)-1))
-    double irr = 2100 * pow(2, (-1/cos(M_PI/2((fmod(t, 12.0))/6)-1)));
+    double irr = 2100 * pow(2, (-1/cos((M_PI/2)*((fmod(current_time, 12.0))/6)-1)));
     return round(irr, 5);
 }
 
