@@ -92,15 +92,17 @@ double get_tire_resistive_force(double grade, const CarModel& car)
 double get_bearing_resistive_force(double car_speed, const CarModel& car)
 {
     // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    double crr2 = 0.3;
+    double brForce = (crr2) * car_speed;
+    return round(brForce, 5);
 }
 
 double get_gravitation_resistive_force(double grade, const CarModel& car)
 {
     // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    double carMass = 250;
+    double gPull = (carMass * 9.81 * grade)/(sqrt(1+pow(grade, 2)));
+    return round(gPull, 5);
 }
 
 // CHECKPOINT:
