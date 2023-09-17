@@ -122,7 +122,12 @@ double get_cda(
 {
     // TODO: IMPLEMENT ME!
     // Note: You can safely assume that route_heading is always 0 in this project.
-    assert(false);
+    // y = Ax^2 + Bx + C
+    // "A": -0.0002725
+    // "B": 0
+    // "C": 0.05772
+
+    //double cda = -0.0002725, 
     return round(0.0, 5);
 }
 
