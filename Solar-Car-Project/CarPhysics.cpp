@@ -1,6 +1,10 @@
 #include "CarPhysics.h"
 #include "CarModel.h"
 #include "Utils.h"
+#include <cmath>>
+
+#define PI 3.142
+#define G_ACC 9.81
 
 // START HERE!
 
@@ -18,23 +22,26 @@
 
 double get_current_speed(double target_speed, double speed_limit)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    // DONE
+    double tmp = min(target_speed, sppee_limit);
+    return round(tmp, 5);
 }
 
 double get_energy_after_segment(double current_level, double energy_gained, const CarModel& car)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    // DONE? (didn't use carModel (third param))
+    //***
+    //***
+    double energy_remaining = current_level + energy_gained;
+
+    return round(energy_remaining, 5);
 }
 
 double get_time_after_segment(double current_time, double segment_distance, double segment_speed)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return 0.0;
+    // DONE
+    double time_after = current_time + (segment_distance / segment_speed);
+    return round(time_after, 5);
 }
 
 double get_energy_gain_after_segment(
@@ -55,37 +62,53 @@ double get_energy_gain_after_segment(
 
 double get_array_power(double irradiance, const CarModel& car)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    // DONE
+    
+    //eSAcos(b)
+    double eEfficiency = car.Array_t.efficiency;
+    double sIrradiance = get_irradiance(car.current_time);
+    double aArea = carArray_t.area;
+
+    double aPower = eEfficiency*sIrradiance*aArea;
+
+    return round(aPower, 5);
 }
 
 double get_irradiance(double current_time)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    // DONE
+
+    double pFirst = (fmod(current_time, 12.0)/6) - 1;
+    double pSecond = (PI/2)pFirst;
+    double pThird = (-1)/(cos(pSecond));
+
+    double irr = 2100 * pow(2, pThird);
+
+    return round(irr, 5);
 }
 
 double get_tire_resistive_force(double grade, const CarModel& car)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    // DONE
+    double trForce = car.Parameters_t.c_rr1 * (car.Parameters_t.mass * G_ACC)/(sqrt(1+pow(grade, 2)))
+
+    return round(trForce, 5);
 }
 
 double get_bearing_resistive_force(double car_speed, const CarModel& car)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    // DONE
+    double brForce = car.Parameters_t.c_rr2 * car_speed;
+    
+    return round(brForce, 5);
 }
 
 double get_gravitation_resistive_force(double grade, const CarModel& car)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    // DONE
+    double gPull = (car.Parameters_t.mass * G_ACC * grade)/(sqrt(1+pow(grade, 2)))
+
+    return round(gPull, 5);
 }
 
 // CHECKPOINT:
