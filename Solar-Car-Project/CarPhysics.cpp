@@ -1,10 +1,10 @@
 #include "CarPhysics.h"
 #include "CarModel.h"
 #include "Utils.h"
-#include <cmath>>
+#include <iostream>
+#include <cmath>
 
-#define PI 3.142
-#define G_ACC 9.81
+
 
 // START HERE!
 
@@ -22,26 +22,20 @@
 
 double get_current_speed(double target_speed, double speed_limit)
 {
-    // DONE
-    double tmp = min(target_speed, sppee_limit);
-    return round(tmp, 5);
+    double x = std::min(target_speed, speed_limit);
+    return round(x, 5);
 }
 
 double get_energy_after_segment(double current_level, double energy_gained, const CarModel& car)
 {
-    // DONE? (didn't use carModel (third param))
-    //***
-    //***
-    double energy_remaining = current_level + energy_gained;
-
-    return round(energy_remaining, 5);
+    double total = current_level + energy_gained;
+    return round(total, 5);
 }
 
 double get_time_after_segment(double current_time, double segment_distance, double segment_speed)
 {
-    // DONE
-    double time_after = current_time + (segment_distance / segment_speed);
-    return round(time_after, 5);
+    double total = current_time + (segment_distance / segment_speed);
+    return round(total, 5);
 }
 
 double get_energy_gain_after_segment(
@@ -57,58 +51,55 @@ double get_energy_gain_after_segment(
     // TODO: IMPLEMENT ME!
     // HINT: Calling get_array_power() and get_power_out() will be required!
     assert(false);
+    //power in * segment * speed --> seconds
     return round(0.0, 5);
 }
 
 double get_array_power(double irradiance, const CarModel& car)
 {
-    // DONE
-    
-    //eSAcos(b)
-    double eEfficiency = car.Array_t.efficiency;
-    double sIrradiance = get_irradiance(car.current_time);
-    double aArea = carArray_t.area;
-
-    double aPower = eEfficiency*sIrradiance*aArea;
-
-    return round(aPower, 5);
+    //eSAcos(0)
+    //A = area of plate = 2
+    //Acos(b) = apparent area 
+    //S = solar radiation = irradiance
+    //e = energy percent = 25
+    int A = 2;
+    int S = irradiance;
+    int e = 0.25;
+    int arraypower = e*S*A;
+    return round(arraypower, 5);
 }
 
 double get_irradiance(double current_time)
 {
-    // DONE
-
-    double pFirst = (fmod(current_time, 12.0)/6) - 1;
-    double pSecond = (PI/2)pFirst;
-    double pThird = (-1)/(cos(pSecond));
-
-    double irr = 2100 * pow(2, pThird);
-
+    // TODO: IMPLEMENT ME!
+    //2100 * 2^(-secant(pi/2((fmod(t, 12.0))/6)-1))
+    double irr = 2100 * pow(2, (-1/cos(M_PI/2((fmod(t, 12.0))/6)-1)));
     return round(irr, 5);
 }
 
 double get_tire_resistive_force(double grade, const CarModel& car)
 {
-    // DONE
-    double trForce = car.Parameters_t.c_rr1 * (car.Parameters_t.mass * G_ACC)/(sqrt(1+pow(grade, 2)))
-
-    return round(trForce, 5);
+    // TODO: IMPLEMENT ME!
+    // Crr1 * mg/sqrt(1 + h^2)
+    // radius = 0.25
+    // g = 9.81
+    // Crr1 = 0.003
+    double trf = 0.003 * 250 / sqrt(1 + pow(grade, 2));
+    return round(trf, 5);
 }
 
 double get_bearing_resistive_force(double car_speed, const CarModel& car)
 {
-    // DONE
-    double brForce = car.Parameters_t.c_rr2 * car_speed;
-    
-    return round(brForce, 5);
+    // TODO: IMPLEMENT ME!
+    assert(false);
+    return round(0.0, 5);
 }
 
 double get_gravitation_resistive_force(double grade, const CarModel& car)
 {
-    // DONE
-    double gPull = (car.Parameters_t.mass * G_ACC * grade)/(sqrt(1+pow(grade, 2)))
-
-    return round(gPull, 5);
+    // TODO: IMPLEMENT ME!
+    assert(false);
+    return round(0.0, 5);
 }
 
 // CHECKPOINT:
