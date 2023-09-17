@@ -123,12 +123,15 @@ double get_cda(
     // TODO: IMPLEMENT ME!
     // Note: You can safely assume that route_heading is always 0 in this project.
     // y = Ax^2 + Bx + C
-    // "A": -0.0002725
-    // "B": 0
-    // "C": 0.05772
+    //yaw angle = arctan((headwind * sin(wind angle)) / (car speed + headwind * cos(wind angle)))
 
-    //double cda = -0.0002725, 
-    return round(0.0, 5);
+    double A = -0.0002725;
+    double C = 0.05772;
+
+    double yaw = 1/tan((wind_speed * sin(wind_heading)) / (car_speed + wind_speed*cos(wind_heading)));
+    double cda = A*(pow(yaw,2)) + C;
+
+    return round(cda, 5);
 }
 
 double get_aero_resistive_force(
@@ -140,8 +143,12 @@ double get_aero_resistive_force(
 {
     // TODO: IMPLEMENT ME!
     // Note: You can safely assume that route_heading is always 0 in this project.
-    assert(false);
-    return round(0.0, 5);
+    
+    double curCDA = get_cda(route_heading, car_speed, wind_heading, wind_speed, car);
+
+    double arForce = (1/2)*(1.2)*(curCDA)*pow(car_speed + wind_speed, 2);
+
+    return round(arForce, 5);
 }
 
 // CHECKPOINT:
