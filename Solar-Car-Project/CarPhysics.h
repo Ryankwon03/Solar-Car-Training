@@ -3,6 +3,7 @@
 #include "CarModel.h"
 
 #include <cmath>
+#include <iostream>
 
 // --- CAR PHYSICS ---
 //
