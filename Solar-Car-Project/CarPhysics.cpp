@@ -169,8 +169,12 @@ double get_resistive_force(
     const CarModel& car)
 {
     // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+    double rForce = get_aero_resistive_force(route_heading, car_speed, wind_heading, wind_speed, car)
+                +   get_tire_resistive_force(grade, car)
+                +   get_bearing_resistive_force(car_speed, car)
+                +   get_gravitation_resistive_force(grade, car);
+
+    return round(rForce, 5);
 }
 
 double get_motor_power(
