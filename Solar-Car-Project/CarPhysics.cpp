@@ -205,9 +205,13 @@ double get_power_out(
     double grade,
     const CarModel& car)
 {
-    // TODO: IMPLEMENT ME!
-    assert(false);
-    return round(0.0, 5);
+
+    double v = car_speed;
+    double rf = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
+    // p_out = P_in * motor_efficiency
+    // p_out (resistance) = F_res * v
+    double power = v * rf;
+    return round(power, 5);
 }
 
 // CHECKPOINT:
