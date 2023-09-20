@@ -192,7 +192,11 @@ double get_motor_power(
     double grade,
     const CarModel& car)
 {
+    // P_out = P_in * Motor_efficiency;
     // TODO: IMPLEMENT ME!
+    // P_in = rf * speed + motor_constant * (wheel radius)^2
+    
+
     assert(false);
     return round(0.0, 5);
 }
