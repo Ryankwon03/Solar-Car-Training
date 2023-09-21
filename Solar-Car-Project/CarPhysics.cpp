@@ -51,8 +51,11 @@ double get_energy_gain_after_segment(
 {
     // TODO: IMPLEMENT ME!
     // HINT: Calling get_array_power() and get_power_out() will be required!
-    assert(false);
+
     //power in * segment * speed --> seconds
+
+    
+
     return round(0.0, 5);
 }
 
@@ -65,7 +68,7 @@ double get_array_power(double irradiance, const CarModel& car)
     //e = energy percent = 25
     double A = car.get_car_constants().array.area;
     double S = irradiance;
-    double e = 0.25; //get current charge?
+    double e = car.get_car_constants().array.efficiency; //get current charge?
     double arraypower = e*S*A;
     return round(arraypower, 5);
 }
@@ -199,9 +202,9 @@ double get_motor_power(
     // P_in = rf * speed + motor_constant * (wheel radius)^2
     double rf = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
 
+    double mpower = rf * car_speed + car.get_car_constants().motor_constant * pow(car.get_car_constants().wheel_radius,2);
 
-    assert(false);
-    return round(0.0, 5);
+    return round(mpower, 5);
 }
 
 
