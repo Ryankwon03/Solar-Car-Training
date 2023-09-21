@@ -78,7 +78,18 @@ double get_irradiance(double current_time)
     return round(irr, 5);
 }
 
-
+double get_tire_resistive_force(double grade, const CarModel& car)
+{
+    // TODO: IMPLEMENT ME!
+    // Crr1 * mg/sqrt(1 + h^2)
+    // radius = 0.25
+    // Crr1 = 0.003
+    double g = 9.81;
+    double crr1 = car.get_car_constants().c_rr1;
+    double mass = car.get_car_constants().mass;
+    double trf = crr1 * mass * g / sqrt(1 + pow(grade, 2));
+    return round(trf, 5);
+}
 
 double get_bearing_resistive_force(double car_speed, const CarModel& car)
 {
@@ -186,12 +197,13 @@ double get_motor_power(
     // P_out = P_in * Motor_efficiency;
     // TODO: IMPLEMENT ME!
     // P_in = rf * speed + motor_constant * (wheel radius)^2
+    double rf = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
 
-    
 
     assert(false);
     return round(0.0, 5);
 }
+
 
 double get_power_out(
     double route_heading,
