@@ -85,14 +85,14 @@ double get_tire_resistive_force(double grade, const CarModel& car)
     // radius = 0.25
     // g = 9.81
     // Crr1 = 0.003
-    double trf = 0.003 * 250 / sqrt(1 + pow(grade, 2));
+    double trf = car.get_car_constants().c_rr1 * car.get_car_constants().mass * 9.81 / sqrt(1 + pow(grade, 2));
     return round(trf, 5);
 }
 
 double get_bearing_resistive_force(double car_speed, const CarModel& car)
 {
     // TODO: IMPLEMENT ME!
-    double crr2 = 0.3;
+    double crr2 = car.get_car_constants().c_rr2;
     double brForce = (crr2) * car_speed;
     return round(brForce, 5);
 }
@@ -100,7 +100,7 @@ double get_bearing_resistive_force(double car_speed, const CarModel& car)
 double get_gravitation_resistive_force(double grade, const CarModel& car)
 {
     // TODO: IMPLEMENT ME!
-    double carMass = 250;
+    double carMass = car.get_car_constants().mass;
     double gPull = (carMass * 9.81 * grade)/(sqrt(1+pow(grade, 2)));
     return round(gPull, 5);
 }
@@ -125,8 +125,8 @@ double get_cda(
     // y = Ax^2 + Bx + C
     //yaw angle = arctan((headwind * sin(wind angle)) / (car speed + headwind * cos(wind angle)))
 
-    double A = -0.0002725;
-    double C = 0.05772;
+    double A = car.get_car_constants().cda.a;
+    double C = car.get_car_constants().cda.c;
 
     double yaw = 1/tan((wind_speed * sin(wind_heading)) / (car_speed + wind_speed*cos(wind_heading)));
     double cda = A*(pow(yaw,2)) + C;
@@ -196,6 +196,9 @@ double get_motor_power(
     // TODO: IMPLEMENT ME!
     // P_in = rf * speed + motor_constant * (wheel radius)^2
     
+    double rf = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
+    
+    double p_in = rf * car_speed + car
 
     assert(false);
     return round(0.0, 5);
