@@ -77,8 +77,10 @@ double get_irradiance(double current_time)
 {
     // TODO: IMPLEMENT ME!
     //2100 * 2^(-secant(pi/2((fmod(t, 12.0))/6)-1))
-    double irr = 2100 * pow(2, (-1/cos((M_PI/2)*((fmod(current_time, 12.0))/6)-1)));
-    return round(irr, 5);
+    double first = fmod(current_time,12.0)/6-1;
+    double full = -1.0/cos(M_PI/2 * first);
+    double ret = 2100 * pow(2, full);
+    return round(ret, 5);
 }
 
 double get_tire_resistive_force(double grade, const CarModel& car)
@@ -98,7 +100,7 @@ double get_bearing_resistive_force(double car_speed, const CarModel& car)
 {
     // TODO: IMPLEMENT ME!
     double crr2 = car.get_car_constants().c_rr2;
-    double brForce = (crr2) * car_speed;
+    double brForce = (crr2) * kph_to_mps(car_speed);
     return round(brForce, 5);
 }
 
@@ -133,8 +135,9 @@ double get_cda(
     double A = car.get_car_constants().cda.a;
     double B = car.get_car_constants().cda.b;
     double C = car.get_car_constants().cda.c;
-
-    double yaw = 1/tan((wind_speed * sin(wind_heading)) / (car_speed + wind_speed*cos(wind_heading)));
+    route_heading = degrees_to_radians(route_heading);
+    wind_heading = degrees_to_radians(wind_heading);
+    double yaw = radians_to_degrees(atan((wind_speed * sin(wind_heading)) / (car_speed + wind_speed*cos(wind_heading))));
     double cda = A*(pow(yaw,2)) + B * yaw + C;
 
     return round(cda, 5);
@@ -147,14 +150,23 @@ double get_aero_resistive_force(
     double wind_speed,
     const CarModel& car)
 {
+    //y = carspeed + windspeed * cos(heading)
+    //x = windspeed*sin(heading)
+    // 피타고라스로 velocity 계산
+
     // TODO: IMPLEMENT ME!
     // Note: You can safely assume that route_heading is always 0 in this project.
     
+    
     double curCDA = get_cda(route_heading, car_speed, wind_heading, wind_speed, car);
 
-    double arForce = (1/2)*(1.2)*(curCDA)*pow(car_speed + wind_speed, 2);
+    // unit conversion
 
-    return round(arForce, 5);
+    double v = sqrt((pow(car_speed + wind_speed*cos(degrees_to_radians(wind_heading)),2)) + pow(wind_speed * sin(degrees_to_radians(wind_heading)),2));
+    double aero_resistive_force = 0.5*1.2*get_cda(route_heading, car_speed, wind_heading, wind_speed, car) * pow(kph_to_mps(v),2);
+
+
+    return round(aero_resistive_force, 5);
 }
 
 // CHECKPOINT:
@@ -201,9 +213,10 @@ double get_motor_power(
     // P_out = P_in * Motor_efficiency;
     // TODO: IMPLEMENT ME!
     // P_in = rf * speed + motor_constant * (wheel radius)^2
+    
     double rf = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
 
-    double mpower = rf * car_speed + car.get_car_constants().motor_constant * pow(car.get_car_constants().wheel_radius,2);
+    double mpower = rf * kph_to_mps(car_speed) + car.get_car_constants().motor_constant * pow(rf * car.get_car_constants().wheel_radius,2);
 
     return round(mpower, 5);
 }
@@ -218,12 +231,11 @@ double get_power_out(
     const CarModel& car)
 {
 
-    double v = car_speed;
-    double rf = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
-    // p_out = P_in * motor_efficiency
-    // p_out (resistance) = F_res * v
-    double power = v * rf;
-    return round(power, 5);
+    double rs = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
+    double v = sqrt((pow(car_speed + wind_speed*cos(degrees_to_radians(wind_heading)),2)) + pow(wind_speed * sin(degrees_to_radians(wind_heading)),2));
+    double powerout = get_motor_power(route_heading, car_speed, wind_heading,wind_speed, grade, car);
+    double power = powerout + car.get_car_constants().parasitic_watts;
+    return round(rs*v, 5);
 }
 
 // CHECKPOINT:
