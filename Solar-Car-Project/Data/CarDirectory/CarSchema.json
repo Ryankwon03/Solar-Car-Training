@@ -13,7 +13,7 @@
   "maxTorque": 80.0,
   "array": {
     "area": 2.0,
-    "efficiency": 0.25
+    "efficiency": 25
   },
   "battery": {
     "capacity": 20000000.0
