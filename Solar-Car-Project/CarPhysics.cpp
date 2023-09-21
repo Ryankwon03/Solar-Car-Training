@@ -131,10 +131,11 @@ double get_cda(
     //yaw angle = arctan((headwind * sin(wind angle)) / (car speed + headwind * cos(wind angle)))
 
     double A = car.get_car_constants().cda.a;
+    double B = car.get_car_constants().cda.b;
     double C = car.get_car_constants().cda.c;
 
     double yaw = 1/tan((wind_speed * sin(wind_heading)) / (car_speed + wind_speed*cos(wind_heading)));
-    double cda = A*(pow(yaw,2)) + C;
+    double cda = A*(pow(yaw,2)) + B * yaw + C;
 
     return round(cda, 5);
 }
