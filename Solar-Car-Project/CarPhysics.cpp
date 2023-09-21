@@ -63,10 +63,10 @@ double get_array_power(double irradiance, const CarModel& car)
     //Acos(b) = apparent area 
     //S = solar radiation = irradiance
     //e = energy percent = 25
-    int A = 2;
-    int S = irradiance;
-    int e = 0.25;
-    int arraypower = e*S*A;
+    double A = car.get_car_constants().array.area;
+    double S = irradiance;
+    double e = 0.25; //get current charge?
+    double arraypower = e*S*A;
     return round(arraypower, 5);
 }
 
@@ -78,16 +78,7 @@ double get_irradiance(double current_time)
     return round(irr, 5);
 }
 
-double get_tire_resistive_force(double grade, const CarModel& car)
-{
-    // TODO: IMPLEMENT ME!
-    // Crr1 * mg/sqrt(1 + h^2)
-    // radius = 0.25
-    // g = 9.81
-    // Crr1 = 0.003
-    double trf = car.get_car_constants().c_rr1 * car.get_car_constants().mass * 9.81 / sqrt(1 + pow(grade, 2));
-    return round(trf, 5);
-}
+
 
 double get_bearing_resistive_force(double car_speed, const CarModel& car)
 {
@@ -195,10 +186,8 @@ double get_motor_power(
     // P_out = P_in * Motor_efficiency;
     // TODO: IMPLEMENT ME!
     // P_in = rf * speed + motor_constant * (wheel radius)^2
+
     
-    double rf = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
-    
-    double p_in = rf * car_speed + car
 
     assert(false);
     return round(0.0, 5);
