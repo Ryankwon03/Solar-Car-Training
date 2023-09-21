@@ -4,9 +4,9 @@
   "crr2": 0.3,
   "parasiticWatts": 10.0,
   "CdA": {
-    "A": 0.0,
-    "B": 0.0,
-    "C": 0.0
+    "A": -0.0002725,
+    "B": 0,
+    "C": 0.05772
   },
   "wheelRadius": 0.25,
   "motorConstant": 0.1765,
