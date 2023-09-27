@@ -66,6 +66,7 @@ double get_energy_gain_after_segment(
 
     double energy = power_in * power_out * distance / speed;
     return round(energy, 5);
+    //hi
 }
 
 double get_array_power(double irradiance, const CarModel& car)
