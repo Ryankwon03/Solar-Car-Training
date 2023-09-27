@@ -57,8 +57,16 @@ double get_energy_gain_after_segment(
 
     //power in * segment * speed --> seconds
 
+    //(powerin-powerout) * distance/speed(k/kph) * 3600
+    
+    double power_in = get_motor_power(car_speed, route_heading, wind_heading, wind_speed, grade, car);
+    double power_out = get_power_out(route_heading, car_speed, wind_heading, wind_speed, grade, car);
+    double distance = segment_distance;
+    double speed = car_speed * 3600;
 
-    return round(0.0, 5);
+    double energy = power_in * power_out * distance / speed;
+    return round(energy, 5);
+    //hi
 }
 
 double get_array_power(double irradiance, const CarModel& car)
