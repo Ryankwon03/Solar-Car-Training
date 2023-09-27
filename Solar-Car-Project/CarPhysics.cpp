@@ -233,12 +233,9 @@ double get_power_out(
     double grade,
     const CarModel& car)
 {
+    double pOut = get_motor_power(car_speed, route_heading, wind_heading, wind_speed, grade, car) + car.get_car_constants().parasitic_watts;
 
-    double rs = get_resistive_force(route_heading, car_speed, wind_heading,wind_speed, grade, car);
-    double v = sqrt((pow(car_speed + wind_speed*cos(degrees_to_radians(wind_heading)),2)) + pow(wind_speed * sin(degrees_to_radians(wind_heading)),2));
-    double powerout = get_motor_power(route_heading, car_speed, wind_heading,wind_speed, grade, car);
-    double power = powerout + car.get_car_constants().parasitic_watts;
-    return round(rs*v, 5);
+    return round(pOut, 5);
 }
 
 // CHECKPOINT:
