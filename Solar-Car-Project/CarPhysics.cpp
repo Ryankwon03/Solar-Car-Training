@@ -30,6 +30,9 @@ double get_current_speed(double target_speed, double speed_limit)
 double get_energy_after_segment(double current_level, double energy_gained, const CarModel& car)
 {
     double total = current_level + energy_gained;
+    if(total > car.get_car_constants().battery_capacity){
+        total = car.get_car_constants().battery_capacity;
+    }
     return round(total, 5);
 }
 
