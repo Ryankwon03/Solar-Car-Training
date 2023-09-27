@@ -5,8 +5,6 @@
 #include <cmath>
 #include <math.h>
 
-
-
 // START HERE!
 
 // Refer to the header file (CarPhysics.h) to view explanations for what each function
@@ -59,14 +57,13 @@ double get_energy_gain_after_segment(
 
     //(powerin-powerout) * distance/speed(k/kph) * 3600
     
-    double power_in = get_motor_power(car_speed, route_heading, wind_heading, wind_speed, grade, car);
+    double power_in = get_array_power(get_irradiance(current_time), car);
     double power_out = get_power_out(route_heading, car_speed, wind_heading, wind_speed, grade, car);
     double distance = segment_distance;
-    double speed = car_speed * 3600;
+    double speed = car_speed;
 
-    double energy = power_in * power_out * distance / speed;
+    double energy = (power_in - power_out) * ((distance / speed) * 3600);
     return round(energy, 5);
-    //hi
 }
 
 double get_array_power(double irradiance, const CarModel& car)
