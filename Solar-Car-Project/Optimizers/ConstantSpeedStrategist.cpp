@@ -15,8 +15,55 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
     // should provide some familiarity with the tools available. You should delete this section in your actual solution.
 
     // Say that we want to simulate a race at 10 kph. We can do the following:
-    this->target_speed = 10;
-    const CSVData race_data = simulate_race(this, car, route_data);
+
+    double st = 0.0001;
+    double st_time;
+
+    double ed = 200.0;
+    double ed_time;
+
+    this->target_speed = st;
+    CSVData race_data = simulate_race(this, car, route_data);
+    st_time = race_data.get("time", race_data.size()-1);
+
+    race_data.clear();
+
+    double mid;
+
+    while(abs(st-ed) > 0.0001){
+        mid = (st+ed)/2;
+        
+        this->target_speed = mid;
+        CSVData race_data = simulate_race(this, car, route_data);
+
+        bool pass = true;
+
+        double mid_time = race_data.get("time", race_data.size()-1);
+
+        for (size_t segment_number = 0; segment_number < race_data.size(); ++segment_number) {
+            if (race_data.get("energy", segment_number) < 0) {
+                pass = false;
+                ed = mid;
+                ed_time = mid_time;
+                break;
+            }
+        }
+
+        if(pass){
+            if(abs(mid_time-ed_time) < 0.0001){
+                ed = mid;
+                ed_time = mid_time;
+            }
+            else{
+                st = mid;
+                st_time = mid_time;
+            }
+        }
+
+        race_data.clear();
+    }
+
+    return round(st, 3);
 
     // race_data will be populated with data from the simulated race, in a tabular data structure. The nth row
     // corresponds to the state of the car's physics at the (n+1)th segment on the route. Each column corresponds to
@@ -37,11 +84,7 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
     //      "gravitation-res"
     // Refer to Libraries/CSVData.h for helpful functions. As an example, the below code iterates through
     // the values for gravitational resistance along the route.
-    for (size_t segment_number = 0; segment_number < race_data.size(); ++segment_number) {
-        if (race_data.get("gravitation-res", segment_number) == 0) {
-            // Could do something here, but this code is intentionally useless.
-        }
-    }
+    
     // It might be necessary for your algorithm to simulate and analyze multiple races to confidently decide (to 3
     // decimal places) the optimal target speed. That's okay! The above code shows you how to do it once,
     // albeit with a hardcoded speed and useless/inconclusive "analysis".
@@ -49,7 +92,6 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
     // Once your algorithm has decided what it thinks is the optimal speed, it should return said speed below. The
     // example below returns 1 kph (an extremely unrealistic result) as an example.
     // Don't forget to round the target speed to 3 decimal places!
-    return round(1.0, 3);
 
     // Note that once a target speed is returned from this function, the code included with this project will
     // run a simulation with that target speed, and print the route data to console. That is where the printed CSV

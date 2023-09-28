@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 
     try
     {
-        ifstream route_in(argv[1]);
+        ifstream route_in(argv[1]); 
 
         // Check if the stream is associated with a file. If not, throw an error.
         if (!route_in.is_open())
