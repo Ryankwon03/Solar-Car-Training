@@ -19,12 +19,14 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
     double st = 0.0001;
     double st_time;
 
-    double ed = 200.0;
+    double ed = 1000000.0;
     double ed_time;
 
     this->target_speed = st;
     CSVData race_data = simulate_race(this, car, route_data);
     st_time = race_data.get("time", race_data.size()-1);
+
+
 
     race_data.clear();
 
@@ -41,6 +43,8 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
         double mid_time = race_data.get("time", race_data.size()-1);
 
         for (size_t segment_number = 0; segment_number < race_data.size(); ++segment_number) {
+            std::cout<<race_data.get("energy", segment_number)<<"\n";
+
             if (race_data.get("energy", segment_number) < 0) {
                 pass = false;
                 ed = mid;
@@ -50,7 +54,7 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
         }
 
         if(pass){
-            if(abs(mid_time-ed_time) < 0.0001){
+            if(abs(ed_time-mid_time) < 0.0001){
                 ed = mid;
                 ed_time = mid_time;
             }
