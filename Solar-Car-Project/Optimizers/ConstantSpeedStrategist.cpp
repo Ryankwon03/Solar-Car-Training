@@ -3,7 +3,7 @@
 #include "../SingleRace.h"
 #include "../Utils.h"
 
-double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data, CarModel& car)
+double ConstantSpeedStrategist::find_best_target_speed(const CSVData &route_data, CarModel &car)
 {
     // TODO: Properly implement the logic of this function.
 
@@ -19,33 +19,56 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
     double st = 0.0001;
     double st_time;
 
-    double ed = 1000000.0;
+    double ed = 300.0;
     double ed_time;
 
     this->target_speed = st;
     CSVData race_data = simulate_race(this, car, route_data);
-    st_time = race_data.get("time", race_data.size()-1);
-
-
+    st_time = race_data.get("time", race_data.size() - 1);
 
     race_data.clear();
 
+    this->target_speed = 300;
+    race_data = simulate_race(this, car, route_data);
+
+    int maxSpeed = 0;
+    for (size_t segment_number = 0; segment_number < race_data.size(); ++segment_number)
+    {
+        if (race_data.get("speed", segment_number) > maxSpeed)
+        {
+            maxSpeed = race_data.get("speed", segment_number);
+        }
+    }
+
+    ed = maxSpeed;
+    race_data.clear();
+
+    this->target_speed = ed;
+    race_data = simulate_race(this, car, route_data);
+    ed_time = race_data.get("time", race_data.size() - 1);
+
+    race_data.clear();
+    
+
     double mid;
 
-    while(abs(st-ed) > 0.0001){
-        mid = (st+ed)/2;
-        
+    while (abs(st - ed) > 0.0001)
+    {
+        mid = (st + ed) / 2;
+
         this->target_speed = mid;
-        CSVData race_data = simulate_race(this, car, route_data);
+        race_data = simulate_race(this, car, route_data);
 
         bool pass = true;
 
-        double mid_time = race_data.get("time", race_data.size()-1);
+        double mid_time = race_data.get("time", race_data.size() - 1);
 
-        for (size_t segment_number = 0; segment_number < race_data.size(); ++segment_number) {
-            std::cout<<race_data.get("energy", segment_number)<<"\n";
+        for (size_t segment_number = 0; segment_number < race_data.size(); ++segment_number)
+        {
+            // std::cout<<race_data.get("energy", segment_number)<<"\n";
 
-            if (race_data.get("energy", segment_number) < 0) {
+            if (race_data.get("energy", segment_number) < 0)
+            {
                 pass = false;
                 ed = mid;
                 ed_time = mid_time;
@@ -53,12 +76,15 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
             }
         }
 
-        if(pass){
-            if(abs(ed_time-mid_time) < 0.0001){
+        if (pass)
+        {
+            if (abs(ed_time - mid_time) < 0.0001)
+            {
                 ed = mid;
                 ed_time = mid_time;
             }
-            else{
+            else
+            {
                 st = mid;
                 st_time = mid_time;
             }
@@ -67,7 +93,15 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
         race_data.clear();
     }
 
-    return round(st, 3);
+    if (st == ed || st <= 0.001){
+        std::cout<<"No solution\n";
+        this->target_speed = 10.0;
+        return 10.0;
+    }
+    else
+        this->target_speed = round(st, 3);
+
+    return target_speed;
 
     // race_data will be populated with data from the simulated race, in a tabular data structure. The nth row
     // corresponds to the state of the car's physics at the (n+1)th segment on the route. Each column corresponds to
@@ -88,7 +122,7 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData& route_data
     //      "gravitation-res"
     // Refer to Libraries/CSVData.h for helpful functions. As an example, the below code iterates through
     // the values for gravitational resistance along the route.
-    
+
     // It might be necessary for your algorithm to simulate and analyze multiple races to confidently decide (to 3
     // decimal places) the optimal target speed. That's okay! The above code shows you how to do it once,
     // albeit with a hardcoded speed and useless/inconclusive "analysis".
