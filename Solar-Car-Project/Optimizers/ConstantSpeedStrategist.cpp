@@ -16,7 +16,7 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData &route_data
 
     // Say that we want to simulate a race at 10 kph. We can do the following:
 
-    double st = 0.0001;
+    double st = 0;
     double st_time;
 
     double ed = 300.0;
@@ -31,7 +31,7 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData &route_data
     this->target_speed = 300;
     race_data = simulate_race(this, car, route_data);
 
-    int maxSpeed = 0;
+    double maxSpeed = 0;
     for (size_t segment_number = 0; segment_number < race_data.size(); ++segment_number)
     {
         if (race_data.get("speed", segment_number) > maxSpeed)
@@ -49,10 +49,9 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData &route_data
 
     race_data.clear();
     
-
     double mid;
 
-    while (abs(st - ed) > 0.0001)
+    while (abs(st - ed) > 0.00001)
     {
         mid = (st + ed) / 2;
 
@@ -75,19 +74,19 @@ double ConstantSpeedStrategist::find_best_target_speed(const CSVData &route_data
                 break;
             }
         }
-
+ 
         if (pass)
         {
-            if (abs(ed_time - mid_time) < 0.0001)
-            {
-                ed = mid;
-                ed_time = mid_time;
-            }
-            else
-            {
+            // if (abs(ed_time - mid_time) < 0.00001)
+            // {
+            //     ed = mid;
+            //     ed_time = mid_time;
+            // }
+            // else
+            // {
                 st = mid;
                 st_time = mid_time;
-            }
+            // }
         }
 
         race_data.clear();
